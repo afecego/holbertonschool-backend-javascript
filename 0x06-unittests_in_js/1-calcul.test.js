@@ -12,6 +12,10 @@ describe('calculateNumber: ', function () {
 		assert.equal(calculateNumber("SUM", 1.7, 1.2), 3);
 		assert.equal(calculateNumber("SUM", 1.3, 1.8), 3);
 		assert.equal(calculateNumber("SUM", 1.3, 1.3), 2);
+		assert.equal(calculateNumber("SUM", -1.3, 1.3), 0);
+		assert.equal(calculateNumber("SUM", 1.3, -1.3), 0);
+		assert.equal(calculateNumber("SUM", -1.3, -1.3), -2);
+
 	});
 	it('SUBTRACT', function() {
 		assert.equal(calculateNumber("SUBTRACT", 1, 1), 0);
