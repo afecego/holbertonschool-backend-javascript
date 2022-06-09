@@ -32,6 +32,8 @@ describe('calculateNumber: ', function () {
 			assert.equal(calculateNumber("SUBTRACT", 1.3, -1.3), 2);
 			assert.equal(calculateNumber("SUBTRACT", -1.3, 1.3), -2);
 			assert.equal(calculateNumber("SUBTRACT", -1.3, -1.3), 0);
+			assert.equal(calculateNumber("SUBTRACT", -1.3, 0), -1);
+			assert.equal(calculateNumber("SUBTRACT", 1.3, 0), 1);
 		});
 	});
 	describe("DIVIDE", function () {
@@ -45,10 +47,12 @@ describe('calculateNumber: ', function () {
 			assert.equal(calculateNumber("DIVIDE", 1.7, 1.2), 2);
 			assert.equal(calculateNumber("DIVIDE", 1.3, 1.8), 0.5);
 			assert.equal(calculateNumber("DIVIDE", 1.3, 1.3), 1);
-			assert.equal(calculateNumber("DIVIDE", 1.3, -1.3), -1);
-			assert.equal(calculateNumber("DIVIDE", -1.3, 1.3), -1);
-			assert.equal(calculateNumber("DIVIDE", -1.3, -1.3), 1);
+			assert.equal(calculateNumber("DIVIDE", 1.3, -1.2), -1);
+			assert.equal(calculateNumber("DIVIDE", -1.3, 1.2), -1);
+			assert.equal(calculateNumber("DIVIDE", -1.3, -1.2), 1);
 			assert.equal(calculateNumber("DIVIDE", 1.3, 0), "Error");
+			assert.equal(calculateNumber("DIVIDE", -1.3, 0), "Error");
+			assert.equal(calculateNumber("DIVIDE", 0, 1), 0);
 		});
 	});
 });
