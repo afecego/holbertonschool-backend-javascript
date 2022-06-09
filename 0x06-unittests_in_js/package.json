@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test": "mocha"
+  },
+  "name": "0x06-unittests_in_js",
+  "description": "0x06. Unittests in JS",
+  "version": "1.0.0",
+  "main": "0-calcul.js",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.17.0"
+  }
+}
