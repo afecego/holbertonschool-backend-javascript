@@ -76,14 +76,23 @@ describe('Index page', function () {
 	})
   })
   it('...', function (done) {
-	request('http://localhost:7865/login', 'POST', {userName: 'Betty'}, (err, response, body) => {
+	const web = {
+		url: 'http://localhost:7865/login',
+		method: 'POST',
+		json: {userName: 'Betty'}
+	};
+	request(web, (err, response, body) => {
 		expect(response.statusCode).to.equal(200);
 		expect(body).to.equal('Welcome Betty');
 		done()
 	})
   })
   it('...', function (done) {
-	request('http://localhost:7865/login', 'POST', (err, response, body) => {
+	const web = {
+		url: 'http://localhost:7865/login',
+		method: 'POST'
+	};
+	request(web, (err, response, body) => {
 		expect(response.statusCode).to.equal(200);
 		expect(body).to.equal('Welcome undefined');
 		done()
