@@ -61,7 +61,7 @@ describe('Index page', function () {
 	})
   })
   it('...', function (done) {
-	request('http://localhost:7865/login', (err, response, body) => {
+	request('http://localhost:7865/available_payments', (err, response, body) => {
 		expect(response.statusCode).to.equal(200);
 		const bodyJs = JSON.parse(body);
 
@@ -72,6 +72,13 @@ describe('Index page', function () {
           },
         };
 		expect(bodyJs).to.deep.equal(bodyGet);
+		done()
+	})
+  })
+  it('...', function (done) {
+	request('http://localhost:7865/login', 'POST', {userName: 'Betty'}, (err, response, body) => {
+		expect(response.statusCode).to.equal(200);
+		expect(body).to.equal('Welcome Betty');
 		done()
 	})
   })
