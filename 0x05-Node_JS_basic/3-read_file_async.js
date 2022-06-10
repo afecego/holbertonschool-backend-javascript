@@ -1,36 +1,28 @@
-const fs = require('fs');
+const Fs = require('fs');
 
-const countStudents = (path) => new Promise((resolve, reject) => {
-  fs.readFile(path, (error, csvData) => {
-    if (error) {
-      reject(Error('Cannot load the database'));
-    }
-    if (csvData) {
-      const fields = {};
-      let data = csvData.toString().split('\n');
-      data = data.filter((element) => element.length > 0);
-      data.shift();
-
-      data.forEach((element) => {
-        if (element.length > 0) {
-          const row = element.split(',');
-          if (row[3] in fields) {
-            fields[row[3]].push(row[0]);
-          } else {
-            fields[row[3]] = [row[0]];
-          }
-        }
-      });
-      console.log(`Number of students: ${data.length}`);
-      for (const field in fields) {
-        if (field) {
-          const list = fields[field];
-          console.log(`Number of students in ${field}: ${list.length}. List: ${list.toString().replace(/,/g, ', ')}`);
-        }
+function countStudents(path) {
+  return new Promise((resolve, reject) => {
+    Fs.readFile(path, (err, databaseFile) => {
+      if (err) {
+        reject(new Error('Cannot load the database'));
+        return;
       }
-    }
-    resolve();
+
+      const databasefile = databaseFile.toString().split('\n');
+      databasefile.shift();
+      const numOfStudents = databasefile.length;
+      const result = [`Number of students: ${numOfStudents}`, [], []];
+      databasefile.forEach((element) => {
+        const resultElement = element.split(',');
+        if (resultElement[3] === 'CS') {
+          result[1].push(resultElement[0]);
+        } else if (resultElement[3] === 'SWE') { result[2].push(resultElement[0]); }
+      });
+      const finalResult = `${result[0]}\nNumber of students in CS: ${result[1].length}. List: ${result[1].toString().split(',').join(', ')}\nNumber of students in SWE: ${result[2].length}. List: ${result[2].toString().split(',').join(', ')}`;
+      console.log(finalResult);
+      resolve(finalResult);
+    });
   });
-});
+}
 
 module.exports = countStudents;
