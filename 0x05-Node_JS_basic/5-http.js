@@ -1,31 +1,29 @@
 const http = require('http');
 const countStudents = require('./3-read_file_async');
 
+const hostname = '127.0.0.1';
 const port = 1245;
 
-// create a server object
-const app = http.createServer((req, res) => {
-  const { method, url } = req;
-  if (method === 'GET' && url === '/') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.write('Hello Holberton School!'); // write a response to the client
-    res.end();
-  }
-  if (method === 'GET' && url === '/students') {
-    countStudents(String(process.argv.slice(2)))
-      .then((arrayOfClasses) => {
-        res.write('This is the list of our students\n'); // write a response to the client
-        res.write(`Number of students: ${arrayOfClasses.count}\n`);
-        for (const cls in arrayOfClasses) {
-          if (cls && cls !== 'count') res.write(`Number of students in ${cls}: ${arrayOfClasses[cls].length}. List: ${arrayOfClasses[cls].join(', ')}\n`);
-        }
-        res.end(); // end the response
+const app = http.createServer(async (req, res) => {
+  res.statusCode = 200;
+  if (req.url === '/') {
+    res.end('Hello Holberton School!');
+  } else if (req.url === '/students') {
+    let dbInfo = 'This is the list of our students\n';
+    await countStudents(process.argv[2])
+      .then((msg) => {
+        dbInfo += msg;
+        res.end(dbInfo);
       })
-      .catch((err) => { throw err; });
+      .catch((err) => {
+        dbInfo += err.message;
+        res.end(dbInfo);
+      });
   }
 });
 
-app.listen(port);
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}`);
+});
 
 module.exports = app;
