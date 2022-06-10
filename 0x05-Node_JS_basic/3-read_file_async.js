@@ -1,33 +1,36 @@
 const fs = require('fs');
 
-function countStudents(path) {
-  const promise = (resolve, reject) => {
-    fs.readFile(path, 'utf-8', (err, dataDb) => {
-      if (err) reject(Error('Cannot load the database'));
-      if (dataDb) {
-        const inFields = {}; // {field: {counter: # of students, students: [list of students]}}
-        const data = dataDb.split('\n');
-        console.log(`Number of students: ${data.length - 1}`);
+const countStudents = (path) => new Promise((resolve, reject) => {
+  fs.readFile(path, (error, csvData) => {
+    if (error) {
+      reject(Error('Cannot load the database'));
+    }
+    if (csvData) {
+      const fields = {};
+      let data = csvData.toString().split('\n');
+      data = data.filter((element) => element.length > 0);
+      data.shift();
 
-        for (let i = 1; i < data.length; i += 1) {
-          const line = data[i].split(','); // get each word
-          if (inFields[line[3]]) { // line[3] is the field name
-            inFields[line[3]].counter += 1;
-            inFields[line[3]].students.push(` ${line[0]}`); // line[0] is firstname
+      data.forEach((element) => {
+        if (element.length > 0) {
+          const row = element.split(',');
+          if (row[3] in fields) {
+            fields[row[3]].push(row[0]);
           } else {
-            inFields[line[3]] = { counter: 1, students: [`${line[0]}`] };
+            fields[row[3]] = [row[0]];
           }
         }
-        for (const key in inFields) {
-          if (Object.prototype.hasOwnProperty.call(inFields, key)) {
-            console.log(`Number of students in ${key}: ${inFields[key].counter}. List: ${inFields[key].students}`);
-          }
+      });
+      console.log(`Number of students: ${data.length}`);
+      for (const field in fields) {
+        if (field) {
+          const list = fields[field];
+          console.log(`Number of students in ${field}: ${list.length}. List: ${list.toString().replace(/,/g, ', ')}`);
         }
-        // ret obj of students in fields and number of students
-        resolve({ inFields, counter: data.length - 1 });
       }
-    });
-  };
-  return new Promise(promise);
-}
+    }
+    resolve();
+  });
+});
+
 module.exports = countStudents;
